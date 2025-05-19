@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import classification_report
 import xgboost as xgb
 import cv2
 import time
@@ -365,6 +366,16 @@ def plot_models(df):
     y_pred_rf = rf.predict(X_te)
     y_pred_xgb = xgb_model.predict(X_te)
 
+    reports = {
+        'Logistic Regression': classification_report(y_te, y_pred_lr, target_names=['Low','Avg','High']),
+        'Random Forest'      : classification_report(y_te, y_pred_rf, target_names=['Low','Avg','High']),
+        'XGBoost'            : classification_report(y_te, y_pred_xgb, target_names=['Low','Avg','High'])
+    }
+
+    print("\n=== Classification reports ===")
+    for name, rep in reports.items():
+        print(f"\n{name}\n{rep}")
+
     # Confusion Matrices
     models = ['Logistic Regression', 'Random Forest', 'XGBoost']
     predictions = [y_pred_lr, y_pred_rf, y_pred_xgb]
@@ -426,11 +437,3 @@ if __name__ == '__main__':
         print(f"Employee is predicted to be a: {performance_category}")
 
         plot_productivity_time_series(posture_results)
-
-    
-        
-
-
-
-
-
